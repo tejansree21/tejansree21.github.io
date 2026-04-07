@@ -26,6 +26,13 @@ const recentNotes = allNotes
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
 
+const allCerts = await getCollection('certifications');
+const homeCerts = allCerts
+  .filter((c) => c.data.showOnHome)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const homeMajorCerts = homeCerts.filter((c) => c.data.size === 'major');
+const homeMinorCerts = homeCerts.filter((c) => c.data.size === 'minor');
+
 const skills = [
   { name: 'TypeScript', variant: 'accent' },
   { name: 'React', variant: 'accent' },
@@ -159,6 +166,60 @@ const skills = [
         ))}
       </div>
       <a href="/notes/" class="view-all">View all notes →</a>
+    </section>
+
+    <!-- Certifications -->
+    <section class="section" id="certifications">
+      <div class="section-label">// certifications</div>
+
+      {homeMajorCerts.length > 0 && (
+        <div class="certs-major">
+          {homeMajorCerts.map((cert) => (
+            <a href={cert.data.credentialUrl || `/certifications/${cert.id}/`} target={cert.data.credentialUrl ? '_blank' : '_self'} rel="noopener" class="cert-card cert-card--major card">
+              {cert.data.image ? (
+                <img src={cert.data.image} alt={cert.data.title} class="cert-card__image" />
+              ) : (
+                <div class="cert-card__badge">★</div>
+              )}
+              <div class="cert-card__content">
+                <h3 class="cert-card__title">{cert.data.title}</h3>
+                <p class="cert-card__issuer">{cert.data.issuer}</p>
+                {cert.data.description && (
+                  <p class="cert-card__desc">{cert.data.description}</p>
+                )}
+                <div class="cert-card__meta">
+                  <span class="cert-card__date">{cert.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                  <div class="cert-card__tags">
+                    {cert.data.tags.map((tag: string) => (
+                      <span class="cert-card__tag">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+
+      {homeMinorCerts.length > 0 && (
+        <div class="certs-minor">
+          {homeMinorCerts.map((cert) => (
+            <a href={cert.data.credentialUrl || `/certifications/${cert.id}/`} target={cert.data.credentialUrl ? '_blank' : '_self'} rel="noopener" class="cert-chip">
+              {cert.data.image ? (
+                <img src={cert.data.image} alt={cert.data.title} class="cert-chip__img" />
+              ) : (
+                <span class="cert-chip__icon">✓</span>
+              )}
+              <div class="cert-chip__info">
+                <span class="cert-chip__title">{cert.data.title}</span>
+                <span class="cert-chip__issuer">{cert.data.issuer} · {cert.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+
+      <a href="/certifications/" class="view-all">View all certifications →</a>
     </section>
 
     <!-- Contact CTA -->
@@ -408,5 +469,173 @@ const skills = [
     .blog-item__date {
       margin-left: 0;
     }
+
+    .certs-major {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* Certifications - Major */
+  .certs-major {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .cert-card--major {
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .cert-card__image {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 8px;
+    flex-shrink: 0;
+    background: var(--bg3);
+    padding: 4px;
+  }
+
+  .cert-card__badge {
+    font-size: 16px;
+    color: var(--accent);
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 229, 160, 0.1);
+    border-radius: 8px;
+    margin-top: 2px;
+  }
+
+  .cert-card__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cert-card__desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .cert-card__title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  .cert-card__issuer {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .cert-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .cert-card__date {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .cert-card__tags {
+    display: flex;
+    gap: 4px;
+  }
+
+  .cert-card__tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--bg3);
+    color: var(--muted);
+  }
+
+  /* Certifications - Minor */
+  .certs-minor {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .cert-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--bg2);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+
+  .cert-chip:hover {
+    border-color: var(--border);
+    transform: translateX(4px);
+  }
+
+  .cert-chip__icon {
+    font-size: 12px;
+    color: var(--accent3);
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(124, 77, 255, 0.1);
+    border-radius: 50%;
+  }
+
+  .cert-chip__img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border-radius: 6px;
+    flex-shrink: 0;
+    background: var(--bg3);
+    padding: 2px;
+  }
+
+  .cert-chip__info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .cert-chip__title {
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cert-chip__issuer {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
   }
 </style>

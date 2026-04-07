@@ -34,4 +34,20 @@ const notes = defineCollection({
   }),
 });
 
-export const collections = { projects, blog, notes };
+const certifications = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    issuer: z.string(),
+    date: z.coerce.date(),
+    credentialUrl: z.string().optional(),
+    credentialId: z.string().optional(),
+    size: z.enum(['major', 'minor']).default('minor'),
+    showOnHome: z.boolean().default(false),
+    tags: z.array(z.string()).default([]),
+    image: z.string().optional(),
+  }),
+});
+
+export const collections = { projects, blog, notes, certifications };

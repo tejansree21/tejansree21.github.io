@@ -1,0 +1,114 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const certs = await getCollection('certifications');
+  return certs.map((cert) => ({
+    params: { slug: cert.id },
+    props: { cert },
+  }));
+}
+
+const { cert } = Astro.props;
+const { Content } = await render(cert);
+---
+
+<BaseLayout title={`${cert.data.title} — Certifications`}>
+  <Header />
+  <main class="container">
+    <article class="cert-page">
+      <a href="/certifications/" class="back-link">← back to certifications</a>
+
+      <header class="cert-page__header">
+        {cert.data.image ? (
+          <img src={cert.data.image} alt={cert.data.title} class="cert-page__image" />
+        ) : (
+          <div class="cert-page__badge">{cert.data.size === 'major' ? '★' : '✓'}</div>
+        )}
+        <div>
+          <h1 class="cert-page__title">{cert.data.title}</h1>
+          <p class="cert-page__issuer">Issued by {cert.data.issuer}</p>
+          {cert.data.description && (
+            <p class="cert-page__desc">{cert.data.description}</p>
+          )}
+          <p class="cert-page__date">
+            {cert.data.date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          </p>
+          {cert.data.credentialId && (
+            <p class="cert-page__id">Credential ID: {cert.data.credentialId}</p>
+          )}
+          <div class="cert-page__actions">
+            {cert.data.credentialUrl && (
+              <a href={cert.data.credentialUrl} target="_blank" rel="noopener" class="social-btn">
+                View Credential →
+              </a>
+            )}
+          </div>
+          <div class="cert-page__tags">
+            {cert.data.tags.map((tag: string) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .cert-page { padding: 2rem 0; max-width: 700px; }
+
+  .back-link {
+    font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+    text-decoration: none; display: inline-block; margin-bottom: 2rem; transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--accent); }
+
+  .cert-page__header {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 3rem;
+  }
+
+  .cert-page__image {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    border-radius: 12px;
+    flex-shrink: 0;
+    background: var(--bg3);
+    padding: 6px;
+  }
+
+  .cert-page__badge {
+    font-size: 20px;
+    color: var(--accent);
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 229, 160, 0.1);
+    border-radius: 12px;
+  }
+
+  .cert-page__title { font-size: 28px; font-weight: 600; margin-bottom: 6px; }
+  .cert-page__issuer { font-size: 15px; color: var(--muted); margin-bottom: 4px; }
+  .cert-page__desc { font-size: 14px; color: var(--muted); line-height: 1.5; margin-bottom: 8px; }
+  .cert-page__date { font-family: var(--font-mono); font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .cert-page__id { font-family: var(--font-mono); font-size: 11px; color: var(--muted); opacity: 0.7; margin-bottom: 12px; }
+
+  .cert-page__actions { margin-bottom: 12px; }
+
+  .cert-page__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+</style>

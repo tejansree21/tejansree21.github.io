@@ -1,0 +1,226 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const allCerts = await getCollection('certifications');
+const majorCerts = allCerts
+  .filter((c) => c.data.size === 'major')
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const minorCerts = allCerts
+  .filter((c) => c.data.size === 'minor')
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Certifications — Tejan Sree Challa">
+  <Header />
+  <main class="container">
+    <section class="page-header">
+      <div class="section-label">// certifications</div>
+      <h1 class="page-title">Certifications & credentials</h1>
+      <p class="page-desc">Professional certifications and courses I've completed — from major credentials to focused skill badges.</p>
+    </section>
+
+    {majorCerts.length > 0 && (
+      <div class="certs-section">
+        <h2 class="certs-heading">Major certifications</h2>
+        <div class="certs-grid">
+          {majorCerts.map((cert) => (
+            <a href={cert.data.credentialUrl || `/certifications/${cert.id}/`} target={cert.data.credentialUrl ? '_blank' : '_self'} rel="noopener" class="cert-card card">
+              {cert.data.image ? (
+                <img src={cert.data.image} alt={cert.data.title} class="cert-card__image" />
+              ) : (
+                <div class="cert-card__badge">★</div>
+              )}
+              <div class="cert-card__content">
+                <h3 class="cert-card__title">{cert.data.title}</h3>
+                <p class="cert-card__issuer">{cert.data.issuer}</p>
+                {cert.data.description && (
+                  <p class="cert-card__desc">{cert.data.description}</p>
+                )}
+                <p class="cert-card__date">{cert.data.date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+                {cert.data.credentialId && (
+                  <p class="cert-card__id">ID: {cert.data.credentialId}</p>
+                )}
+                <div class="cert-card__tags">
+                  {cert.data.tags.map((tag: string) => (
+                    <span class="cert-card__tag">{tag}</span>
+                  ))}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {minorCerts.length > 0 && (
+      <div class="certs-section">
+        <h2 class="certs-heading">Courses & skill badges</h2>
+        <div class="certs-minor-grid">
+          {minorCerts.map((cert) => (
+            <a href={cert.data.credentialUrl || `/certifications/${cert.id}/`} target={cert.data.credentialUrl ? '_blank' : '_self'} rel="noopener" class="cert-minor">
+              {cert.data.image ? (
+                <img src={cert.data.image} alt={cert.data.title} class="cert-minor__img" />
+              ) : (
+                <div class="cert-minor__icon">✓</div>
+              )}
+              <div class="cert-minor__info">
+                <span class="cert-minor__title">{cert.data.title}</span>
+                <span class="cert-minor__meta">{cert.data.issuer} · {cert.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                {cert.data.tags.length > 0 && (
+                  <div class="cert-minor__tags">
+                    {cert.data.tags.map((tag: string) => (
+                      <span class="cert-minor__tag">{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .page-header { padding: 3rem 0 2rem; }
+  .page-title { font-size: 32px; font-weight: 600; margin-bottom: 8px; }
+  .page-desc { color: var(--muted); font-size: 15px; max-width: 550px; }
+
+  .certs-section { margin-top: 2.5rem; }
+
+  .certs-heading {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Major certs */
+  .certs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .cert-card {
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .cert-card__badge {
+    font-size: 16px;
+    color: var(--accent);
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 229, 160, 0.1);
+    border-radius: 8px;
+    margin-top: 2px;
+  }
+
+  .cert-card__content { flex: 1; min-width: 0; }
+
+  .cert-card__image {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    border-radius: 10px;
+    flex-shrink: 0;
+    background: var(--bg3);
+    padding: 4px;
+  }
+
+  .cert-card__title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .cert-card__issuer { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+  .cert-card__desc { font-size: 12px; color: var(--muted); line-height: 1.4; margin-bottom: 6px; }
+  .cert-card__date { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .cert-card__id { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-bottom: 8px; opacity: 0.7; }
+
+  .cert-card__tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .cert-card__tag {
+    font-family: var(--font-mono); font-size: 10px;
+    padding: 3px 10px; border-radius: 12px;
+    background: var(--bg3); color: var(--muted);
+  }
+
+  /* Minor certs */
+  .certs-minor-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .cert-minor {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg2);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+
+  .cert-minor:hover {
+    border-color: var(--border);
+    transform: translateX(4px);
+  }
+
+  .cert-minor__icon {
+    font-size: 12px;
+    color: var(--accent3);
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(124, 77, 255, 0.1);
+    border-radius: 50%;
+    margin-top: 2px;
+  }
+
+  .cert-minor__img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 6px;
+    flex-shrink: 0;
+    background: var(--bg3);
+    padding: 2px;
+    margin-top: 2px;
+  }
+
+  .cert-minor__info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .cert-minor__title { font-size: 13px; font-weight: 500; }
+  .cert-minor__meta { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+
+  .cert-minor__tags { display: flex; gap: 4px; margin-top: 4px; }
+  .cert-minor__tag {
+    font-family: var(--font-mono); font-size: 9px;
+    padding: 2px 8px; border-radius: 10px;
+    background: var(--bg3); color: var(--muted);
+  }
+
+  @media (max-width: 600px) {
+    .certs-grid { grid-template-columns: 1fr; }
+    .certs-minor-grid { grid-template-columns: 1fr; }
+  }
+</style>
