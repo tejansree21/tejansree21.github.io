@@ -1,0 +1,148 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Case Studies & Publications — Tejan Sree Challa">
+  <Header />
+  <main class="container">
+    <section class="page-header">
+      <div class="section-label">// case studies & publications</div>
+      <h1 class="page-title">Research & deep dives</h1>
+      <p class="page-desc">In-depth case studies of projects and research publications. Currently a work in progress — exciting things are coming.</p>
+    </section>
+
+    <div class="wip-section">
+      <div class="wip-card">
+        <div class="wip-card__status">
+          <span class="wip-card__dot"></span>
+          IN PROGRESS
+        </div>
+        <h3 class="wip-card__title">Brain Insight Classifier — Full Case Study</h3>
+        <p class="wip-card__desc">
+          A deep dive into building a brain imaging classifier: problem definition, data pipeline, model architecture, training challenges, and results analysis.
+        </p>
+        <div class="wip-card__tags">
+          <span class="tag tag--accent">TypeScript</span>
+          <span class="tag tag--purple">Machine Learning</span>
+          <span class="tag">Medical AI</span>
+        </div>
+        <div class="wip-card__eta">
+          <span>Expected:</span> Coming Soon
+        </div>
+      </div>
+
+      <div class="wip-card">
+        <div class="wip-card__status">
+          <span class="wip-card__dot"></span>
+          IN PROGRESS
+        </div>
+        <h3 class="wip-card__title">Cost Rental Analysis — UX & Technical Case Study</h3>
+        <p class="wip-card__desc">
+          How I designed and built a rental property finder for Ireland's cost rental scheme: user research, technical architecture, and Supabase real-time patterns.
+        </p>
+        <div class="wip-card__tags">
+          <span class="tag tag--accent">React</span>
+          <span class="tag tag--blue">Supabase</span>
+          <span class="tag">UX Research</span>
+        </div>
+        <div class="wip-card__eta">
+          <span>Expected:</span> Coming Soon
+        </div>
+      </div>
+    </div>
+
+    <div class="publications-note">
+      <div class="section-label" style="margin-top: 3rem;">// publications</div>
+      <p class="pub-text">
+        No publications yet — but I'm actively working on research. 
+        This section will be updated as my work gets published. 
+        Check back soon or subscribe to my <a href="/rss.xml">RSS feed</a> to stay updated.
+      </p>
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .page-header { padding: 3rem 0 2rem; }
+  .page-title { font-size: 32px; font-weight: 600; margin-bottom: 8px; }
+  .page-desc { color: var(--muted); font-size: 15px; max-width: 550px; }
+
+  .wip-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 2rem;
+    max-width: 700px;
+  }
+
+  .wip-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    border-left: 3px solid #f59e0b;
+  }
+
+  .wip-card__status {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: #f59e0b;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .wip-card__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f59e0b;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .wip-card__title {
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .wip-card__desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+
+  .wip-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .wip-card__eta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .wip-card__eta span {
+    color: var(--accent);
+  }
+
+  .pub-text {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 550px;
+  }
+
+  .pub-text a {
+    color: var(--accent);
+  }
+</style>

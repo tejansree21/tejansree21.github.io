@@ -3,13 +3,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import Terminal from '../components/Terminal.astro';
+import GitHubGraph from '../components/GitHubGraph.astro';
+import SkillGlobe from '../components/SkillGlobe.astro';
+import Timeline from '../components/Timeline.astro';
 import { getCollection } from 'astro:content';
 
 const allProjects = await getCollection('projects');
 const featuredProjects = allProjects
   .filter((p) => p.data.featured)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-
 const recentProjects = allProjects
   .filter((p) => !p.data.featured)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -27,38 +30,21 @@ const recentNotes = allNotes
   .slice(0, 3);
 
 const allCerts = await getCollection('certifications');
-const homeCerts = allCerts
-  .filter((c) => c.data.showOnHome)
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const homeCerts = allCerts.filter((c) => c.data.showOnHome).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const homeMajorCerts = homeCerts.filter((c) => c.data.size === 'major');
 const homeMinorCerts = homeCerts.filter((c) => c.data.size === 'minor');
-
-const skills = [
-  { name: 'TypeScript', variant: 'accent' },
-  { name: 'React', variant: 'accent' },
-  { name: 'Next.js', variant: 'accent' },
-  { name: 'Python', variant: 'purple' },
-  { name: 'Machine Learning', variant: 'purple' },
-  { name: 'Node.js', variant: 'blue' },
-  { name: 'Supabase', variant: 'blue' },
-  { name: 'Git', variant: '' },
-  { name: 'Astro', variant: '' },
-  { name: 'Tailwind CSS', variant: '' },
-  { name: 'SQL', variant: '' },
-];
 ---
 
 <BaseLayout>
   <Header />
-
   <main class="container">
-    <!-- Hero -->
+    <!-- Hero with typing animation -->
     <section class="hero">
       <div class="hero__glow hero__glow--1"></div>
       <div class="hero__glow hero__glow--2"></div>
       <p class="hero__greeting">// hello world<span class="cursor">_</span></p>
       <h1 class="hero__name">Tejan Sree Challa</h1>
-      <p class="hero__tagline">Developer. Builder. Lifelong learner.</p>
+      <p class="hero__tagline"><span id="typed-text"></span><span class="typed-cursor">|</span></p>
       <div class="hero__socials">
         <a href="https://github.com/tejansree21" target="_blank" rel="noopener" class="social-btn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
@@ -75,154 +61,61 @@ const skills = [
       </div>
     </section>
 
-    <!-- About -->
+    <section class="section"><Terminal /></section>
     <section class="section" id="about">
       <div class="section-label">// about</div>
-      <p class="about-text">
-        I'm Tejan — a Computer Science student at the National College of Ireland with a passion for building meaningful software.
-        From brain imaging classifiers to rental cost finders, I love tackling real-world problems with code.
-        I'm particularly drawn to full-stack development and machine learning, and I believe in learning in public —
-        sharing what I build, what I break, and what I learn along the way.
-      </p>
-      <p class="about-text">
-        When I'm not coding, you'll find me exploring new tech, writing about my experiments,
-        or figuring out how to make something just a little bit better than yesterday.
-      </p>
+      <p class="about-text">I'm Tejan — a Computer Science student at the National College of Ireland with a passion for building meaningful software. From brain imaging classifiers to rental cost finders, I love tackling real-world problems with code. I'm particularly drawn to full-stack development and machine learning, and I believe in learning in public — sharing what I build, what I break, and what I learn along the way.</p>
+      <p class="about-text">When I'm not coding, you'll find me exploring new tech, writing about my experiments, or figuring out how to make something just a little bit better than yesterday.</p>
     </section>
 
-    <!-- Tech Stack -->
-    <section class="section">
-      <div class="section-label">// tech stack</div>
-      <div class="skills-grid">
-        {skills.map((skill) => (
-          <span class:list={['tag', skill.variant && `tag--${skill.variant}`]}>
-            {skill.name}
-          </span>
-        ))}
-      </div>
-    </section>
+    <section class="section"><div class="section-label">// tech stack</div><SkillGlobe /></section>
+    <section class="section"><GitHubGraph /></section>
 
-    <!-- Featured Projects -->
     <section class="section" id="projects">
       <div class="section-label">// featured projects</div>
       <div class="projects-grid">
-        {featuredProjects.map((project) => (
-          <ProjectCard
-            title={project.data.title}
-            description={project.data.description}
-            tags={project.data.tags}
-            featured={true}
-            github={project.data.github}
-            live={project.data.live}
-            slug={project.id}
-          />
-        ))}
-        {recentProjects.map((project) => (
-          <ProjectCard
-            title={project.data.title}
-            description={project.data.description}
-            tags={project.data.tags}
-            github={project.data.github}
-            live={project.data.live}
-            slug={project.id}
-          />
-        ))}
+        {featuredProjects.map((p) => <ProjectCard title={p.data.title} description={p.data.description} tags={p.data.tags} featured={true} github={p.data.github} live={p.data.live} slug={p.id} />)}
+        {recentProjects.map((p) => <ProjectCard title={p.data.title} description={p.data.description} tags={p.data.tags} github={p.data.github} live={p.data.live} slug={p.id} />)}
       </div>
       <a href="/projects/" class="view-all">View all projects →</a>
     </section>
 
-    <!-- Blog -->
-    <section class="section" id="blog">
-      <div class="section-label">// blog</div>
-      <div class="blog-list">
-        {recentPosts.map((post) => (
-          <a href={`/blog/${post.id}/`} class="blog-item">
-            <div class="blog-item__info">
-              <span class="blog-item__title">{post.data.title}</span>
-              {post.data.tags[0] && (
-                <span class="blog-item__tag">{post.data.tags[0]}</span>
-              )}
-            </div>
-            <span class="blog-item__date">
-              {post.data.date.toISOString().split('T')[0]}
-            </span>
-          </a>
-        ))}
-      </div>
-      <a href="/blog/" class="view-all">View all posts →</a>
-    </section>
+    <section class="section" id="timeline"><div class="section-label">// journey</div><Timeline /></section>
 
-    <!-- Notes -->
-    <section class="section" id="notes">
-      <div class="section-label">// daily notes</div>
-      <div class="notes-list">
-        {recentNotes.map((note) => (
-          <a href={`/notes/${note.id}/`} class="note-card">
-            <div class="note-card__date">
-              {note.data.date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).toUpperCase()}
-            </div>
-            <p class="note-card__title">{note.data.title}</p>
-          </a>
-        ))}
-      </div>
-      <a href="/notes/" class="view-all">View all notes →</a>
-    </section>
-
-    <!-- Certifications -->
     <section class="section" id="certifications">
       <div class="section-label">// certifications</div>
-
-      {homeMajorCerts.length > 0 && (
-        <div class="certs-major">
-          {homeMajorCerts.map((cert) => (
-            <a href={cert.data.credentialUrl || `/certifications/${cert.id}/`} target={cert.data.credentialUrl ? '_blank' : '_self'} rel="noopener" class="cert-card cert-card--major card">
-              {cert.data.image ? (
-                <img src={cert.data.image} alt={cert.data.title} class="cert-card__image" />
-              ) : (
-                <div class="cert-card__badge">★</div>
-              )}
-              <div class="cert-card__content">
-                <h3 class="cert-card__title">{cert.data.title}</h3>
-                <p class="cert-card__issuer">{cert.data.issuer}</p>
-                {cert.data.description && (
-                  <p class="cert-card__desc">{cert.data.description}</p>
-                )}
-                <div class="cert-card__meta">
-                  <span class="cert-card__date">{cert.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
-                  <div class="cert-card__tags">
-                    {cert.data.tags.map((tag: string) => (
-                      <span class="cert-card__tag">{tag}</span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
-      )}
-
-      {homeMinorCerts.length > 0 && (
-        <div class="certs-minor">
-          {homeMinorCerts.map((cert) => (
-            <a href={cert.data.credentialUrl || `/certifications/${cert.id}/`} target={cert.data.credentialUrl ? '_blank' : '_self'} rel="noopener" class="cert-chip">
-              {cert.data.image ? (
-                <img src={cert.data.image} alt={cert.data.title} class="cert-chip__img" />
-              ) : (
-                <span class="cert-chip__icon">✓</span>
-              )}
-              <div class="cert-chip__info">
-                <span class="cert-chip__title">{cert.data.title}</span>
-                <span class="cert-chip__issuer">{cert.data.issuer} · {cert.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
-              </div>
-            </a>
-          ))}
-        </div>
-      )}
-
+      {homeMajorCerts.length > 0 && (<div class="certs-major">{homeMajorCerts.map((c) => (
+        <a href={c.data.credentialUrl || `/certifications/${c.id}/`} target={c.data.credentialUrl ? '_blank' : '_self'} rel="noopener" class="cert-card cert-card--major card">
+          {c.data.image ? <img src={c.data.image} alt={c.data.title} class="cert-card__image" /> : <div class="cert-card__badge">★</div>}
+          <div class="cert-card__content">
+            <h3 class="cert-card__title">{c.data.title}</h3>
+            <p class="cert-card__issuer">{c.data.issuer}</p>
+            {c.data.description && <p class="cert-card__desc">{c.data.description}</p>}
+            <div class="cert-card__meta"><span class="cert-card__date">{c.data.date.toLocaleDateString('en-US',{month:'short',year:'numeric'})}</span><div class="cert-card__tags">{c.data.tags.map((t:string)=><span class="cert-card__tag">{t}</span>)}</div></div>
+          </div>
+        </a>
+      ))}</div>)}
+      {homeMinorCerts.length > 0 && (<div class="certs-minor">{homeMinorCerts.map((c) => (
+        <a href={c.data.credentialUrl || `/certifications/${c.id}/`} target={c.data.credentialUrl ? '_blank' : '_self'} rel="noopener" class="cert-chip">
+          {c.data.image ? <img src={c.data.image} alt={c.data.title} class="cert-chip__img" /> : <span class="cert-chip__icon">✓</span>}
+          <div class="cert-chip__info"><span class="cert-chip__title">{c.data.title}</span><span class="cert-chip__issuer">{c.data.issuer} · {c.data.date.toLocaleDateString('en-US',{month:'short',year:'numeric'})}</span></div>
+        </a>
+      ))}</div>)}
       <a href="/certifications/" class="view-all">View all certifications →</a>
     </section>
 
-    <!-- Contact CTA -->
+    <section class="section" id="blog">
+      <div class="section-label">// blog</div>
+      <div class="blog-list">{recentPosts.map((p)=>(<a href={`/blog/${p.id}/`} class="blog-item"><div class="blog-item__info"><span class="blog-item__title">{p.data.title}</span>{p.data.tags[0]&&<span class="blog-item__tag">{p.data.tags[0]}</span>}</div><span class="blog-item__date">{p.data.date.toISOString().split('T')[0]}</span></a>))}</div>
+      <a href="/blog/" class="view-all">View all posts →</a>
+    </section>
+
+    <section class="section" id="notes">
+      <div class="section-label">// daily notes</div>
+      <div class="notes-list">{recentNotes.map((n)=>(<a href={`/notes/${n.id}/`} class="note-card"><div class="note-card__date">{n.data.date.toLocaleDateString('en-US',{month:'short',day:'2-digit',year:'numeric'}).toUpperCase()}</div><p class="note-card__title">{n.data.title}</p></a>))}</div>
+      <a href="/notes/" class="view-all">View all notes →</a>
+    </section>
+
     <section class="section contact-cta" id="contact">
       <div class="section-label">// contact</div>
       <h2 class="section-title">Let's build something together</h2>
@@ -234,408 +127,65 @@ const skills = [
       </div>
     </section>
   </main>
-
   <Footer />
 </BaseLayout>
 
+<script>
+function setupTyping(){const el=document.getElementById('typed-text');if(!el)return;const phrases=['Developer.','Builder.','ML Enthusiast.','Lifelong Learner.','Open Source Contributor.','CS Student at NCI.'];let pi=0,ci=0,del=false;function type(){const cur=phrases[pi];if(del){el.textContent=cur.substring(0,ci-1);ci--}else{el.textContent=cur.substring(0,ci+1);ci++}let d=del?40:80;if(!del&&ci===cur.length){d=2000;del=true}else if(del&&ci===0){del=false;pi=(pi+1)%phrases.length;d=400}setTimeout(type,d)}type()}
+setupTyping();document.addEventListener('astro:after-swap',setupTyping);
+</script>
+
 <style>
-  /* Hero */
-  .hero {
-    padding: 4rem 0 2rem;
-    position: relative;
-  }
-
-  .hero__glow {
-    position: absolute;
-    pointer-events: none;
-    border-radius: 50%;
-  }
-
-  .hero__glow--1 {
-    top: 0;
-    left: -100px;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(0, 229, 160, 0.08) 0%, transparent 70%);
-  }
-
-  .hero__glow--2 {
-    top: 40px;
-    right: -50px;
-    width: 250px;
-    height: 250px;
-    background: radial-gradient(circle, rgba(124, 77, 255, 0.06) 0%, transparent 70%);
-  }
-
-  .hero__greeting {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--accent);
-    margin-bottom: 12px;
-    letter-spacing: 2px;
-  }
-
-  .cursor {
-    animation: blink 1s step-end infinite;
-  }
-
-  .hero__name {
-    font-size: 48px;
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 8px;
-    background: linear-gradient(135deg, var(--text) 0%, var(--accent) 60%, var(--accent2) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero__tagline {
-    font-size: 18px;
-    color: var(--muted);
-    font-weight: 300;
-    margin-bottom: 24px;
-  }
-
-  .hero__socials {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  /* Sections */
-  .section {
-    margin-bottom: 4rem;
-  }
-
-  .about-text {
-    color: var(--muted);
-    line-height: 1.7;
-    font-size: 15px;
-    margin-bottom: 16px;
-    max-width: 650px;
-  }
-
-  .skills-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .projects-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-
-  .view-all {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--accent);
-    display: inline-block;
-    margin-top: 16px;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-
-  .view-all:hover {
-    color: var(--accent2);
-    transform: translateX(4px);
-  }
-
-  /* Blog list */
-  .blog-list {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .blog-item {
-    padding: 16px 0;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    text-decoration: none;
-    color: var(--text);
-    transition: all 0.2s;
-  }
-
-  .blog-item:hover {
-    padding-left: 8px;
-  }
-
-  .blog-item:hover .blog-item__title {
-    color: var(--accent);
-  }
-
-  .blog-item__info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .blog-item__title {
-    font-size: 15px;
-    transition: color 0.2s;
-  }
-
-  .blog-item__tag {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    padding: 3px 10px;
-    border-radius: 12px;
-    background: rgba(124, 77, 255, 0.1);
-    color: var(--accent3);
-  }
-
-  .blog-item__date {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--muted);
-    white-space: nowrap;
-    margin-left: 16px;
-  }
-
-  /* Notes */
-  .notes-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .note-card {
-    display: block;
-    text-decoration: none;
-    color: var(--text);
-    background: var(--bg2);
-    border-left: 2px solid var(--accent3);
-    padding: 14px 18px;
-    border-radius: 0 8px 8px 0;
-    transition: all 0.2s;
-  }
-
-  .note-card:hover {
-    border-left-color: var(--accent);
-    transform: translateX(4px);
-  }
-
-  .note-card__date {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--accent3);
-    margin-bottom: 6px;
-  }
-
-  .note-card__title {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.5;
-  }
-
-  /* Contact CTA */
-  .contact-cta {
-    text-align: center;
-    padding: 2rem 0;
-  }
-
-  .contact-cta__text {
-    color: var(--muted);
-    font-size: 14px;
-    margin-bottom: 24px;
-  }
-
-  .contact-cta__links {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  @media (max-width: 600px) {
-    .hero__name {
-      font-size: 32px;
-    }
-
-    .projects-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .blog-item {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
-    }
-
-    .blog-item__date {
-      margin-left: 0;
-    }
-
-    .certs-major {
-      grid-template-columns: 1fr !important;
-    }
-  }
-
-  /* Certifications - Major */
-  .certs-major {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-
-  .cert-card--major {
-    text-decoration: none;
-    color: var(--text);
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-  }
-
-  .cert-card__image {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
-    border-radius: 8px;
-    flex-shrink: 0;
-    background: var(--bg3);
-    padding: 4px;
-  }
-
-  .cert-card__badge {
-    font-size: 16px;
-    color: var(--accent);
-    flex-shrink: 0;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 229, 160, 0.1);
-    border-radius: 8px;
-    margin-top: 2px;
-  }
-
-  .cert-card__content {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .cert-card__desc {
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.4;
-    margin-bottom: 8px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .cert-card__title {
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 2px;
-  }
-
-  .cert-card__issuer {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 8px;
-  }
-
-  .cert-card__meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .cert-card__date {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--muted);
-  }
-
-  .cert-card__tags {
-    display: flex;
-    gap: 4px;
-  }
-
-  .cert-card__tag {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    background: var(--bg3);
-    color: var(--muted);
-  }
-
-  /* Certifications - Minor */
-  .certs-minor {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .cert-chip {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: var(--bg2);
-    border-radius: 8px;
-    text-decoration: none;
-    color: var(--text);
-    transition: all 0.2s;
-    border: 1px solid transparent;
-  }
-
-  .cert-chip:hover {
-    border-color: var(--border);
-    transform: translateX(4px);
-  }
-
-  .cert-chip__icon {
-    font-size: 12px;
-    color: var(--accent3);
-    flex-shrink: 0;
-    width: 22px;
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(124, 77, 255, 0.1);
-    border-radius: 50%;
-  }
-
-  .cert-chip__img {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-    border-radius: 6px;
-    flex-shrink: 0;
-    background: var(--bg3);
-    padding: 2px;
-  }
-
-  .cert-chip__info {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-
-  .cert-chip__title {
-    font-size: 12px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .cert-chip__issuer {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--muted);
-  }
+.hero{padding:4rem 0 2rem;position:relative}
+.hero__glow{position:absolute;pointer-events:none;border-radius:50%}
+.hero__glow--1{top:0;left:-100px;width:300px;height:300px;background:radial-gradient(circle,rgba(0,229,160,.08) 0%,transparent 70%)}
+.hero__glow--2{top:40px;right:-50px;width:250px;height:250px;background:radial-gradient(circle,rgba(124,77,255,.06) 0%,transparent 70%)}
+.hero__greeting{font-family:var(--font-mono);font-size:13px;color:var(--accent);margin-bottom:12px;letter-spacing:2px}
+.cursor{animation:blink 1s step-end infinite}
+.hero__name{font-size:48px;font-weight:700;line-height:1.1;margin-bottom:8px;background:linear-gradient(135deg,var(--text) 0%,var(--accent) 60%,var(--accent2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero__tagline{font-size:18px;color:var(--muted);font-weight:300;margin-bottom:24px;min-height:28px}
+.typed-cursor{color:var(--accent);animation:blink .7s step-end infinite;font-weight:300}
+.hero__socials{display:flex;gap:12px;flex-wrap:wrap}
+.section{margin-bottom:4rem}
+.about-text{color:var(--muted);line-height:1.7;font-size:15px;margin-bottom:16px;max-width:650px}
+.projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.view-all{font-family:var(--font-mono);font-size:13px;color:var(--accent);display:inline-block;margin-top:16px;text-decoration:none;transition:all .2s}
+.view-all:hover{color:var(--accent2);transform:translateX(4px)}
+.blog-list{display:flex;flex-direction:column}
+.blog-item{padding:16px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:var(--text);transition:all .2s}
+.blog-item:hover{padding-left:8px}
+.blog-item:hover .blog-item__title{color:var(--accent)}
+.blog-item__info{display:flex;align-items:center;gap:8px}
+.blog-item__title{font-size:15px;transition:color .2s}
+.blog-item__tag{font-family:var(--font-mono);font-size:10px;padding:3px 10px;border-radius:12px;background:rgba(124,77,255,.1);color:var(--accent3)}
+.blog-item__date{font-family:var(--font-mono);font-size:11px;color:var(--muted);white-space:nowrap;margin-left:16px}
+.notes-list{display:flex;flex-direction:column;gap:10px}
+.note-card{display:block;text-decoration:none;color:var(--text);background:var(--bg2);border-left:2px solid var(--accent3);padding:14px 18px;border-radius:0 8px 8px 0;transition:all .2s}
+.note-card:hover{border-left-color:var(--accent);transform:translateX(4px)}
+.note-card__date{font-family:var(--font-mono);font-size:10px;color:var(--accent3);margin-bottom:6px}
+.note-card__title{font-size:13px;color:var(--muted);line-height:1.5}
+.certs-major{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.cert-card--major{text-decoration:none;color:var(--text);display:flex;gap:14px;align-items:flex-start}
+.cert-card__image{width:48px;height:48px;object-fit:contain;border-radius:8px;flex-shrink:0;background:var(--bg3);padding:4px}
+.cert-card__badge{font-size:16px;color:var(--accent);flex-shrink:0;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:rgba(0,229,160,.1);border-radius:8px}
+.cert-card__content{flex:1;min-width:0}
+.cert-card__title{font-size:14px;font-weight:500;margin-bottom:2px}
+.cert-card__issuer{font-size:12px;color:var(--muted);margin-bottom:6px}
+.cert-card__desc{font-size:12px;color:var(--muted);line-height:1.4;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cert-card__meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cert-card__date{font-family:var(--font-mono);font-size:10px;color:var(--muted)}
+.cert-card__tags{display:flex;gap:4px}
+.cert-card__tag{font-family:var(--font-mono);font-size:9px;padding:2px 8px;border-radius:10px;background:var(--bg3);color:var(--muted)}
+.certs-minor{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.cert-chip{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg2);border-radius:8px;text-decoration:none;color:var(--text);transition:all .2s;border:1px solid transparent}
+.cert-chip:hover{border-color:var(--border);transform:translateX(4px)}
+.cert-chip__icon{font-size:12px;color:var(--accent3);flex-shrink:0;width:22px;height:22px;display:flex;align-items:center;justify-content:center;background:rgba(124,77,255,.1);border-radius:50%}
+.cert-chip__img{width:28px;height:28px;object-fit:contain;border-radius:6px;flex-shrink:0;background:var(--bg3);padding:2px}
+.cert-chip__info{display:flex;flex-direction:column;min-width:0}
+.cert-chip__title{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cert-chip__issuer{font-family:var(--font-mono);font-size:10px;color:var(--muted)}
+.contact-cta{text-align:center;padding:2rem 0}
+.contact-cta__text{color:var(--muted);font-size:14px;margin-bottom:24px}
+.contact-cta__links{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+@media(max-width:600px){.hero__name{font-size:32px}.projects-grid{grid-template-columns:1fr}.certs-major{grid-template-columns:1fr}.certs-minor{grid-template-columns:1fr}.blog-item{flex-direction:column;align-items:flex-start;gap:4px}.blog-item__date{margin-left:0}}
 </style>

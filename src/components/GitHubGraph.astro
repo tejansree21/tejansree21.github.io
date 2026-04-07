@@ -1,0 +1,117 @@
+---
+const username = 'tejansree21';
+---
+
+<div class="github-graph">
+  <div class="github-graph__header">
+    <span class="section-label" style="margin-bottom: 0;">// github activity</span>
+    <a href={`https://github.com/${username}`} target="_blank" rel="noopener" class="github-graph__link">
+      @{username} →
+    </a>
+  </div>
+  <div class="github-graph__container" id="github-graph">
+    <img
+      src={`https://ghchart.rshah.org/00e5a0/${username}`}
+      alt="GitHub contribution graph"
+      class="github-graph__img"
+      loading="lazy"
+    />
+  </div>
+  <div class="github-graph__stats" id="github-stats">
+    <div class="github-graph__stat">
+      <span class="github-graph__stat-value" id="gh-repos">31</span>
+      <span class="github-graph__stat-label">repos</span>
+    </div>
+    <div class="github-graph__stat">
+      <span class="github-graph__stat-value" id="gh-stars">—</span>
+      <span class="github-graph__stat-label">stars</span>
+    </div>
+    <div class="github-graph__stat">
+      <span class="github-graph__stat-value" id="gh-followers">—</span>
+      <span class="github-graph__stat-label">followers</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .github-graph {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    overflow: hidden;
+  }
+
+  .github-graph__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .github-graph__link {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .github-graph__container {
+    overflow-x: auto;
+    margin-bottom: 16px;
+  }
+
+  .github-graph__img {
+    width: 100%;
+    min-width: 600px;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  [data-theme="light"] .github-graph__img {
+    filter: none;
+  }
+
+  .github-graph__stats {
+    display: flex;
+    gap: 24px;
+  }
+
+  .github-graph__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .github-graph__stat-value {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .github-graph__stat-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+</style>
+
+<script>
+  async function fetchGitHubStats() {
+    try {
+      const res = await fetch('https://api.github.com/users/tejansree21');
+      if (!res.ok) return;
+      const data = await res.json();
+      const repos = document.getElementById('gh-repos');
+      const stars = document.getElementById('gh-stars');
+      const followers = document.getElementById('gh-followers');
+      if (repos) repos.textContent = data.public_repos || '31';
+      if (followers) followers.textContent = data.followers || '0';
+    } catch {}
+  }
+  fetchGitHubStats();
+  document.addEventListener('astro:after-swap', fetchGitHubStats);
+</script>

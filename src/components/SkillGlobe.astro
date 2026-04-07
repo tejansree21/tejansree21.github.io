@@ -1,0 +1,138 @@
+---
+const skills = [
+  'TypeScript', 'React', 'Next.js', 'Python', 'Machine Learning',
+  'Node.js', 'Supabase', 'Git', 'Astro', 'Tailwind CSS', 'SQL',
+  'JavaScript', 'HTML', 'CSS', 'REST APIs', 'GitHub Actions',
+  'VS Code', 'Docker', 'Linux', 'Markdown'
+];
+---
+
+<div class="skill-globe" id="skill-globe">
+  <canvas id="globe-canvas" width="400" height="400"></canvas>
+</div>
+
+<style>
+  .skill-globe {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0;
+  }
+
+  #globe-canvas {
+    max-width: 100%;
+    height: auto;
+    cursor: grab;
+  }
+
+  #globe-canvas:active {
+    cursor: grabbing;
+  }
+</style>
+
+<script define:vars={{ skills }}>
+  function setupGlobe() {
+    const canvas = document.getElementById('globe-canvas');
+    if (!canvas || !(canvas instanceof HTMLCanvasElement)) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const width = 400;
+    const height = 400;
+    const radius = 150;
+    const tags = skills;
+    const count = tags.length;
+
+    const points = tags.map((_, i) => {
+      const phi = Math.acos(-1 + (2 * i + 1) / count);
+      const theta = Math.sqrt(count * Math.PI) * phi;
+      return {
+        x: Math.cos(theta) * Math.sin(phi),
+        y: Math.sin(theta) * Math.sin(phi),
+        z: Math.cos(phi),
+      };
+    });
+
+    let angleX = 0;
+    let angleY = 0;
+    let autoRotateX = 0.003;
+    let autoRotateY = 0.005;
+    let isDragging = false;
+    let lastMouse = { x: 0, y: 0 };
+
+    function rotateX(p, a) {
+      const cos = Math.cos(a), sin = Math.sin(a);
+      return { x: p.x, y: p.y * cos - p.z * sin, z: p.y * sin + p.z * cos };
+    }
+
+    function rotateY(p, a) {
+      const cos = Math.cos(a), sin = Math.sin(a);
+      return { x: p.x * cos + p.z * sin, y: p.y, z: -p.x * sin + p.z * cos };
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+
+      const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+      const textColor = isDark ? '#e8e8f0' : '#1a1a2e';
+      const accentColor = '#00e5a0';
+
+      const projected = points.map((p, i) => {
+        let rp = rotateX(p, angleX);
+        rp = rotateY(rp, angleY);
+        const scale = (rp.z + 2) / 3;
+        return {
+          x: width / 2 + rp.x * radius,
+          y: height / 2 + rp.y * radius,
+          z: rp.z,
+          scale,
+          tag: tags[i],
+        };
+      });
+
+      projected.sort((a, b) => a.z - b.z);
+
+      projected.forEach((p) => {
+        const alpha = (p.z + 1) / 2;
+        const size = 10 + p.scale * 5;
+        ctx.font = `${p.scale > 0.6 ? '500' : '400'} ${size}px JetBrains Mono, monospace`;
+        ctx.textAlign = 'center';
+        ctx.fillStyle = p.scale > 0.7 ? accentColor : textColor;
+        ctx.globalAlpha = 0.2 + alpha * 0.8;
+        ctx.fillText(p.tag, p.x, p.y);
+      });
+
+      ctx.globalAlpha = 1;
+      angleX += autoRotateX;
+      angleY += autoRotateY;
+      requestAnimationFrame(draw);
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      lastMouse = { x: e.clientX, y: e.clientY };
+      autoRotateX = 0;
+      autoRotateY = 0;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - lastMouse.x;
+      const dy = e.clientY - lastMouse.y;
+      angleY += dx * 0.005;
+      angleX += dy * 0.005;
+      lastMouse = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+      autoRotateX = 0.003;
+      autoRotateY = 0.005;
+    });
+
+    draw();
+  }
+
+  setupGlobe();
+  document.addEventListener('astro:after-swap', setupGlobe);
+</script>

@@ -1,0 +1,257 @@
+---
+---
+<div class="terminal" id="terminal">
+  <div class="terminal__header">
+    <div class="terminal__dots">
+      <span class="terminal__dot terminal__dot--red"></span>
+      <span class="terminal__dot terminal__dot--yellow"></span>
+      <span class="terminal__dot terminal__dot--green"></span>
+    </div>
+    <span class="terminal__title">tejan@portfolio ~ $</span>
+  </div>
+  <div class="terminal__body" id="terminal-body">
+    <div class="terminal__welcome">
+      <p>Welcome to Tejan's interactive terminal! Type <span class="terminal__cmd">help</span> to see available commands.</p>
+    </div>
+    <div class="terminal__output" id="terminal-output"></div>
+    <div class="terminal__input-line">
+      <span class="terminal__prompt">visitor@tejan.dev ~ $</span>
+      <input type="text" class="terminal__input" id="terminal-input" autocomplete="off" spellcheck="false" placeholder="type a command..." />
+    </div>
+  </div>
+</div>
+
+<style>
+  .terminal {
+    background: #0d0d14;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    max-width: 100%;
+  }
+
+  .terminal__header {
+    background: #161622;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .terminal__dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .terminal__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .terminal__dot--red { background: #ff5f57; }
+  .terminal__dot--yellow { background: #febc2e; }
+  .terminal__dot--green { background: #28c840; }
+
+  .terminal__title {
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .terminal__body {
+    padding: 14px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .terminal__welcome p {
+    color: var(--muted);
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+
+  .terminal__cmd {
+    color: var(--accent);
+    background: rgba(0, 229, 160, 0.1);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  .terminal__input-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .terminal__prompt {
+    color: var(--accent);
+    white-space: nowrap;
+    font-size: 12px;
+  }
+
+  .terminal__input {
+    background: none;
+    border: none;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    flex: 1;
+    outline: none;
+    caret-color: var(--accent);
+  }
+
+  .terminal__input::placeholder {
+    color: var(--border);
+  }
+
+  .terminal__output :global(.term-line) {
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+
+  .terminal__output :global(.term-cmd) {
+    color: var(--muted);
+  }
+
+  .terminal__output :global(.term-result) {
+    color: var(--text);
+  }
+
+  .terminal__output :global(.term-accent) {
+    color: var(--accent);
+  }
+
+  .terminal__output :global(.term-purple) {
+    color: var(--accent3);
+  }
+
+  .terminal__output :global(.term-error) {
+    color: #ff5f57;
+  }
+</style>
+
+<script>
+  function setupTerminal() {
+    const input = document.getElementById('terminal-input') as HTMLInputElement;
+    const output = document.getElementById('terminal-output');
+    const body = document.getElementById('terminal-body');
+    if (!input || !output || !body) return;
+
+    const commands: Record<string, string> = {
+      help: `<span class="term-accent">Available commands:</span>
+  <span class="term-accent">about</span>     — Who is Tejan?
+  <span class="term-accent">skills</span>    — Tech stack & tools
+  <span class="term-accent">projects</span>  — Featured projects
+  <span class="term-accent">contact</span>   — Get in touch
+  <span class="term-accent">education</span> — Where I study
+  <span class="term-accent">socials</span>   — Social links
+  <span class="term-accent">certs</span>     — Certifications
+  <span class="term-accent">clear</span>     — Clear terminal
+  <span class="term-accent">whoami</span>    — Who are you?`,
+
+      about: `<span class="term-accent">Tejan Sree Challa</span>
+  CS student at National College of Ireland.
+  I build full-stack apps, ML projects, and tools.
+  I believe in learning in public and shipping fast.`,
+
+      skills: `<span class="term-accent">Languages:</span> TypeScript, Python, JavaScript, SQL, HTML/CSS
+<span class="term-accent">Frameworks:</span> React, Next.js, Astro, Node.js, Tailwind
+<span class="term-accent">Tools:</span>      Supabase, Git, GitHub Actions, VS Code
+<span class="term-accent">Areas:</span>      Full-Stack Dev, Machine Learning, APIs`,
+
+      projects: `<span class="term-accent">★ Brain Insight Classifier Nexus</span> — ML brain imaging classifier
+  <span class="term-purple">→</span> TypeScript, Machine Learning, Medical AI
+
+<span class="term-accent">● Cost Rental Finder</span> — Rental property search tool
+  <span class="term-purple">→</span> React, Supabase, Maps API
+
+<span class="term-accent">● Social Media Dashboard</span> — Analytics dashboard
+  <span class="term-purple">→</span> Next.js, Charts, API
+
+Type <span class="term-accent">open projects</span> to visit the projects page.`,
+
+      contact: `<span class="term-accent">Email:</span>    tejansree1229@gmail.com
+<span class="term-accent">College:</span>  x24318116@student.ncirl.ie
+<span class="term-accent">GitHub:</span>   github.com/tejansree21
+<span class="term-accent">Twitter:</span>  x.com/Tejan_Ch
+<span class="term-accent">LinkedIn:</span> linkedin.com/in/tejan-challa`,
+
+      education: `<span class="term-accent">National College of Ireland</span>
+  BSc (Hons) in Computing — 2023 to Present
+  Dublin, Ireland`,
+
+      socials: `<span class="term-accent">GitHub:</span>   <a href="https://github.com/tejansree21" target="_blank">github.com/tejansree21</a>
+<span class="term-accent">Twitter:</span>  <a href="https://x.com/Tejan_Ch" target="_blank">x.com/Tejan_Ch</a>
+<span class="term-accent">LinkedIn:</span> <a href="https://linkedin.com/in/tejan-challa" target="_blank">linkedin.com/in/tejan-challa</a>`,
+
+      certs: `<span class="term-accent">★ AWS ML Engineer Associate Curriculum</span> — AWS, Feb 2026
+<span class="term-accent">★ Fundamentals of ML and AI</span> — AWS, Dec 2025
+<span class="term-accent">● Understanding ChatGPT</span> — DataCamp, Mar 2026`,
+
+      whoami: `<span class="term-accent">visitor</span> — Welcome to my portfolio! 👋`,
+    };
+
+    const history: string[] = [];
+    let historyIndex = -1;
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const cmd = input.value.trim().toLowerCase();
+        if (!cmd) return;
+
+        history.unshift(cmd);
+        historyIndex = -1;
+
+        if (cmd === 'clear') {
+          output.innerHTML = '';
+          input.value = '';
+          return;
+        }
+
+        if (cmd.startsWith('open ')) {
+          const page = cmd.split(' ')[1];
+          const pages: Record<string, string> = {
+            projects: '/projects/', blog: '/blog/', notes: '/notes/',
+            contact: '/contact/', resume: '/resume/', certs: '/certifications/',
+            certifications: '/certifications/',
+          };
+          if (pages[page]) {
+            window.location.href = pages[page];
+            return;
+          }
+        }
+
+        const result = commands[cmd] || `<span class="term-error">Command not found: ${cmd}. Type <span class="term-accent">help</span> for available commands.</span>`;
+
+        output.innerHTML += `<div class="term-line"><span class="term-cmd">$ ${cmd}</span></div><div class="term-line term-result">${result}</div>`;
+        input.value = '';
+        body.scrollTop = body.scrollHeight;
+      }
+
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (history.length > 0 && historyIndex < history.length - 1) {
+          historyIndex++;
+          input.value = history[historyIndex];
+        }
+      }
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (historyIndex > 0) {
+          historyIndex--;
+          input.value = history[historyIndex];
+        } else {
+          historyIndex = -1;
+          input.value = '';
+        }
+      }
+    });
+  }
+
+  setupTerminal();
+  document.addEventListener('astro:after-swap', setupTerminal);
+</script>

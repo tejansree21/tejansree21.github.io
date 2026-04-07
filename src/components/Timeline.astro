@@ -1,0 +1,131 @@
+---
+interface TimelineItem {
+  date: string;
+  title: string;
+  description: string;
+  type: 'education' | 'project' | 'cert' | 'milestone';
+}
+
+const items: TimelineItem[] = [
+  { date: '2023', title: 'Started BSc Computing at NCI', description: 'Began studying Computer Science at the National College of Ireland, Dublin.', type: 'education' },
+  { date: '2025', title: 'AWS ML & AI Certifications', description: 'Completed Fundamentals of ML and AI, and AWS ML Engineer Associate curriculum.', type: 'cert' },
+  { date: '2025', title: 'Built Brain Insight Classifier', description: 'Developed a TypeScript-based brain imaging classifier using machine learning.', type: 'project' },
+  { date: '2026', title: 'Cost Rental Finder', description: 'Built a React + Supabase app to help find affordable rental properties in Ireland.', type: 'project' },
+  { date: '2026', title: 'Launched Portfolio', description: 'Built and deployed this portfolio with Astro, GitHub Pages, and a dark techy aesthetic.', type: 'milestone' },
+];
+
+const typeColors: Record<string, string> = {
+  education: 'var(--accent2)',
+  project: 'var(--accent)',
+  cert: 'var(--accent3)',
+  milestone: '#f59e0b',
+};
+
+const typeLabels: Record<string, string> = {
+  education: 'EDUCATION',
+  project: 'PROJECT',
+  cert: 'CERTIFICATION',
+  milestone: 'MILESTONE',
+};
+---
+
+<div class="timeline">
+  {items.map((item) => (
+    <div class="timeline__item">
+      <div class="timeline__line">
+        <div class="timeline__dot" style={`background: ${typeColors[item.type]}`}></div>
+      </div>
+      <div class="timeline__content">
+        <div class="timeline__meta">
+          <span class="timeline__date">{item.date}</span>
+          <span class="timeline__type" style={`color: ${typeColors[item.type]}`}>{typeLabels[item.type]}</span>
+        </div>
+        <h3 class="timeline__title">{item.title}</h3>
+        <p class="timeline__desc">{item.description}</p>
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+  }
+
+  .timeline__item {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 24px;
+    position: relative;
+  }
+
+  .timeline__line {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 12px;
+    flex-shrink: 0;
+  }
+
+  .timeline__line::after {
+    content: '';
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: calc(100% - 4px);
+    background: var(--border);
+  }
+
+  .timeline__item:last-child .timeline__line::after {
+    display: none;
+  }
+
+  .timeline__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    z-index: 1;
+    margin-top: 5px;
+  }
+
+  .timeline__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .timeline__meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .timeline__date {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .timeline__type {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    font-weight: 500;
+  }
+
+  .timeline__title {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .timeline__desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+</style>
