@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={`${post.data.title} — Tejan Sree Challa`}>
+  <Header />
+  <main class="container">
+    <article class="post-page">
+      <a href="/blog/" class="back-link">← back to blog</a>
+
+      <header class="post-page__header">
+        <div class="post-page__meta">
+          <span class="post-page__date">{post.data.date.toISOString().split('T')[0]}</span>
+          {post.data.tags.map((tag: string) => (
+            <span class="post-page__tag">{tag}</span>
+          ))}
+        </div>
+        <h1 class="post-page__title">{post.data.title}</h1>
+        <p class="post-page__desc">{post.data.description}</p>
+      </header>
+
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .post-page {
+    padding: 2rem 0;
+    max-width: 700px;
+  }
+
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 2rem;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--accent); }
+
+  .post-page__header { margin-bottom: 3rem; }
+
+  .post-page__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .post-page__date {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .post-page__tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: rgba(124, 77, 255, 0.1);
+    color: var(--accent3);
+  }
+
+  .post-page__title {
+    font-size: 32px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .post-page__desc {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+</style>

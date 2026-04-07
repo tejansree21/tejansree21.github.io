@@ -1,0 +1,54 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__inner">
+      <div class="footer__status">
+        <span class="status-dot"></span>
+        <span>available for opportunities</span>
+      </div>
+      <p class="footer__copy">
+        built with astro &middot; deployed on github pages &middot; &copy; {year} tejan sree challa
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 0;
+    margin-top: 4rem;
+  }
+
+  .footer__inner {
+    text-align: center;
+  }
+
+  .footer__status {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .footer__copy {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+</style>

@@ -1,0 +1,412 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+const featuredProjects = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const recentProjects = allProjects
+  .filter((p) => !p.data.featured)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const allBlog = await getCollection('blog');
+const recentPosts = allBlog
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const allNotes = await getCollection('notes');
+const recentNotes = allNotes
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const skills = [
+  { name: 'TypeScript', variant: 'accent' },
+  { name: 'React', variant: 'accent' },
+  { name: 'Next.js', variant: 'accent' },
+  { name: 'Python', variant: 'purple' },
+  { name: 'Machine Learning', variant: 'purple' },
+  { name: 'Node.js', variant: 'blue' },
+  { name: 'Supabase', variant: 'blue' },
+  { name: 'Git', variant: '' },
+  { name: 'Astro', variant: '' },
+  { name: 'Tailwind CSS', variant: '' },
+  { name: 'SQL', variant: '' },
+];
+---
+
+<BaseLayout>
+  <Header />
+
+  <main class="container">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero__glow hero__glow--1"></div>
+      <div class="hero__glow hero__glow--2"></div>
+      <p class="hero__greeting">// hello world<span class="cursor">_</span></p>
+      <h1 class="hero__name">Tejan Sree Challa</h1>
+      <p class="hero__tagline">Developer. Builder. Lifelong learner.</p>
+      <div class="hero__socials">
+        <a href="https://github.com/tejansree21" target="_blank" rel="noopener" class="social-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          github
+        </a>
+        <a href="https://x.com/Tejan_Ch" target="_blank" rel="noopener" class="social-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          @Tejan_Ch
+        </a>
+        <a href="https://linkedin.com/in/tejan-challa" target="_blank" rel="noopener" class="social-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          linkedin
+        </a>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section" id="about">
+      <div class="section-label">// about</div>
+      <p class="about-text">
+        I'm Tejan — a Computer Science student at the National College of Ireland with a passion for building meaningful software.
+        From brain imaging classifiers to rental cost finders, I love tackling real-world problems with code.
+        I'm particularly drawn to full-stack development and machine learning, and I believe in learning in public —
+        sharing what I build, what I break, and what I learn along the way.
+      </p>
+      <p class="about-text">
+        When I'm not coding, you'll find me exploring new tech, writing about my experiments,
+        or figuring out how to make something just a little bit better than yesterday.
+      </p>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="section">
+      <div class="section-label">// tech stack</div>
+      <div class="skills-grid">
+        {skills.map((skill) => (
+          <span class:list={['tag', skill.variant && `tag--${skill.variant}`]}>
+            {skill.name}
+          </span>
+        ))}
+      </div>
+    </section>
+
+    <!-- Featured Projects -->
+    <section class="section" id="projects">
+      <div class="section-label">// featured projects</div>
+      <div class="projects-grid">
+        {featuredProjects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            tags={project.data.tags}
+            featured={true}
+            github={project.data.github}
+            live={project.data.live}
+            slug={project.id}
+          />
+        ))}
+        {recentProjects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            tags={project.data.tags}
+            github={project.data.github}
+            live={project.data.live}
+            slug={project.id}
+          />
+        ))}
+      </div>
+      <a href="/projects/" class="view-all">View all projects →</a>
+    </section>
+
+    <!-- Blog -->
+    <section class="section" id="blog">
+      <div class="section-label">// blog</div>
+      <div class="blog-list">
+        {recentPosts.map((post) => (
+          <a href={`/blog/${post.id}/`} class="blog-item">
+            <div class="blog-item__info">
+              <span class="blog-item__title">{post.data.title}</span>
+              {post.data.tags[0] && (
+                <span class="blog-item__tag">{post.data.tags[0]}</span>
+              )}
+            </div>
+            <span class="blog-item__date">
+              {post.data.date.toISOString().split('T')[0]}
+            </span>
+          </a>
+        ))}
+      </div>
+      <a href="/blog/" class="view-all">View all posts →</a>
+    </section>
+
+    <!-- Notes -->
+    <section class="section" id="notes">
+      <div class="section-label">// daily notes</div>
+      <div class="notes-list">
+        {recentNotes.map((note) => (
+          <a href={`/notes/${note.id}/`} class="note-card">
+            <div class="note-card__date">
+              {note.data.date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).toUpperCase()}
+            </div>
+            <p class="note-card__title">{note.data.title}</p>
+          </a>
+        ))}
+      </div>
+      <a href="/notes/" class="view-all">View all notes →</a>
+    </section>
+
+    <!-- Contact CTA -->
+    <section class="section contact-cta" id="contact">
+      <div class="section-label">// contact</div>
+      <h2 class="section-title">Let's build something together</h2>
+      <p class="contact-cta__text">Got a project idea, collaboration, or just want to say hi?</p>
+      <div class="contact-cta__links">
+        <a href="mailto:tejansree1229@gmail.com" class="social-btn">✉ Email me</a>
+        <a href="https://linkedin.com/in/tejan-challa" target="_blank" rel="noopener" class="social-btn">LinkedIn</a>
+        <a href="https://x.com/Tejan_Ch" target="_blank" rel="noopener" class="social-btn">Twitter/X</a>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    padding: 4rem 0 2rem;
+    position: relative;
+  }
+
+  .hero__glow {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 50%;
+  }
+
+  .hero__glow--1 {
+    top: 0;
+    left: -100px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(0, 229, 160, 0.08) 0%, transparent 70%);
+  }
+
+  .hero__glow--2 {
+    top: 40px;
+    right: -50px;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(124, 77, 255, 0.06) 0%, transparent 70%);
+  }
+
+  .hero__greeting {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent);
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+  }
+
+  .cursor {
+    animation: blink 1s step-end infinite;
+  }
+
+  .hero__name {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--text) 0%, var(--accent) 60%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero__tagline {
+    font-size: 18px;
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 24px;
+  }
+
+  .hero__socials {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 4rem;
+  }
+
+  .about-text {
+    color: var(--muted);
+    line-height: 1.7;
+    font-size: 15px;
+    margin-bottom: 16px;
+    max-width: 650px;
+  }
+
+  .skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .view-all {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent);
+    display: inline-block;
+    margin-top: 16px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .view-all:hover {
+    color: var(--accent2);
+    transform: translateX(4px);
+  }
+
+  /* Blog list */
+  .blog-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blog-item {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.2s;
+  }
+
+  .blog-item:hover {
+    padding-left: 8px;
+  }
+
+  .blog-item:hover .blog-item__title {
+    color: var(--accent);
+  }
+
+  .blog-item__info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .blog-item__title {
+    font-size: 15px;
+    transition: color 0.2s;
+  }
+
+  .blog-item__tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: rgba(124, 77, 255, 0.1);
+    color: var(--accent3);
+  }
+
+  .blog-item__date {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+    margin-left: 16px;
+  }
+
+  /* Notes */
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .note-card {
+    display: block;
+    text-decoration: none;
+    color: var(--text);
+    background: var(--bg2);
+    border-left: 2px solid var(--accent3);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    transition: all 0.2s;
+  }
+
+  .note-card:hover {
+    border-left-color: var(--accent);
+    transform: translateX(4px);
+  }
+
+  .note-card__date {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent3);
+    margin-bottom: 6px;
+  }
+
+  .note-card__title {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* Contact CTA */
+  .contact-cta {
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  .contact-cta__text {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .contact-cta__links {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 600px) {
+    .hero__name {
+      font-size: 32px;
+    }
+
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .blog-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+
+    .blog-item__date {
+      margin-left: 0;
+    }
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  tags: string[];
+  featured?: boolean;
+  github?: string;
+  live?: string;
+  slug: string;
+}
+
+const { title, description, tags, featured = false, github, live, slug } = Astro.props;
+---
+
+<a href={`/projects/${slug}/`} class:list={['project-card', 'card', { featured }]}>
+  <div class="project-card__label">
+    {featured ? '★ FEATURED' : 'PROJECT'}
+  </div>
+  <h3 class="project-card__title">{title}</h3>
+  <p class="project-card__desc">{description}</p>
+  <div class="project-card__tags">
+    {tags.map((tag) => <span class="project-card__tag">{tag}</span>)}
+  </div>
+  {(github || live) && (
+    <div class="project-card__links">
+      {github && <span class="project-card__link">GitHub →</span>}
+      {live && <span class="project-card__link">Live →</span>}
+    </div>
+  )}
+</a>
+
+<style>
+  .project-card {
+    display: block;
+    text-decoration: none;
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .project-card__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .project-card__title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .project-card__desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .project-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .project-card__tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: var(--bg3);
+    color: var(--muted);
+  }
+
+  .project-card__links {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .project-card__link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+  }
+</style>

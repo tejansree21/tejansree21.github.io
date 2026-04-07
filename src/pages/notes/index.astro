@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const allNotes = await getCollection('notes');
+const notes = allNotes.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout title="Daily Notes — Tejan Sree Challa">
+  <Header />
+  <main class="container">
+    <section class="page-header">
+      <div class="section-label">// daily notes</div>
+      <h1 class="page-title">Digital garden</h1>
+      <p class="page-desc">Quick thoughts, TILs, and things I picked up along the way. A running log of my learning journey.</p>
+    </section>
+
+    <div class="notes-list">
+      {notes.map((note) => (
+        <a href={`/notes/${note.id}/`} class="note-card">
+          <div class="note-card__date">
+            {note.data.date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }).toUpperCase()}
+          </div>
+          <p class="note-card__title">{note.data.title}</p>
+          {note.data.tags.length > 0 && (
+            <div class="note-card__tags">
+              {note.data.tags.map((tag: string) => (
+                <span class="note-card__tag">{tag}</span>
+              ))}
+            </div>
+          )}
+        </a>
+      ))}
+    </div>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .page-header { padding: 3rem 0 2rem; }
+  .page-title { font-size: 32px; font-weight: 600; margin-bottom: 8px; }
+  .page-desc { color: var(--muted); font-size: 15px; max-width: 500px; }
+
+  .notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 2rem;
+  }
+
+  .note-card {
+    display: block;
+    text-decoration: none;
+    color: var(--text);
+    background: var(--bg2);
+    border-left: 2px solid var(--accent3);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    transition: all 0.2s;
+  }
+
+  .note-card:hover {
+    border-left-color: var(--accent);
+    transform: translateX(4px);
+  }
+
+  .note-card__date {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent3);
+    margin-bottom: 6px;
+  }
+
+  .note-card__title {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+
+  .note-card__tags { display: flex; gap: 6px; }
+
+  .note-card__tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--bg3);
+    color: var(--muted);
+  }
+</style>
