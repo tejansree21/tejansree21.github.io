@@ -3,7 +3,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://tejansree21.github.io',
+  site: 'https://tejansree21-github-io.vercel.app',
   integrations: [mdx(), sitemap()],
   markdown: {
     shikiConfig: {
