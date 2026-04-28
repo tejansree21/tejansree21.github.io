@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+<BaseLayout title="Guestbook — Tejan Sree Challa"><Header />
+<main class="container">
+  <section style="padding:3rem 0 2rem"><div class="section-label">// guestbook</div><h1 style="font-size:32px;font-weight:600;margin-bottom:8px">Leave a message</h1><p style="color:var(--muted);font-size:15px">Say hello, drop feedback, or just sign the guestbook.</p></section>
+  <div style="max-width:600px;margin-top:2rem" id="guestbook">
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:2rem">
+      <input type="text" id="gb-name" placeholder="Your name" maxlength="50" style="width:100%;padding:12px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font-body);font-size:14px;outline:none" />
+      <textarea id="gb-message" placeholder="Your message..." maxlength="280" rows="3" style="width:100%;padding:12px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font-body);font-size:14px;outline:none;resize:vertical;min-height:80px"></textarea>
+      <button id="gb-submit" style="font-family:var(--font-mono);font-size:13px;padding:10px 24px;border:1px solid var(--accent);border-radius:6px;color:var(--accent);background:transparent;cursor:pointer;align-self:flex-start">Sign guestbook →</button>
+    </div>
+    <div id="gb-entries"><div id="gb-empty" style="color:var(--muted);font-size:13px;font-style:italic">No entries yet. Be the first to sign!</div></div>
+  </div>
+</main><Footer /></BaseLayout>
+<script>
+function setupGB(){const n=document.getElementById('gb-name'),m=document.getElementById('gb-message'),s=document.getElementById('gb-submit'),e=document.getElementById('gb-entries'),em=document.getElementById('gb-empty');if(!n||!m||!s||!e||!em)return;let gb=[];try{gb=JSON.parse(localStorage.getItem('guestbook')||'[]')}catch{}function render(){e.querySelectorAll('.gb-e').forEach(el=>el.remove());if(!gb.length){em.style.display='block';return}em.style.display='none';gb.forEach(x=>{const d=document.createElement('div');d.className='gb-e';d.style.cssText='background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:10px';d.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:6px"><strong style="font-size:14px;color:var(--accent)">${x.name}</strong><span style="font-family:var(--font-mono);font-size:10px;color:var(--muted)">${x.date}</span></div><p style="font-size:13px;color:var(--muted);line-height:1.5">${x.message}</p>`;e.appendChild(d)})}s.addEventListener('click',()=>{const name=n.value.trim(),msg=m.value.trim();if(!name||!msg)return;gb.unshift({name:name.replace(/</g,'&lt;'),message:msg.replace(/</g,'&lt;'),date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})});localStorage.setItem('guestbook',JSON.stringify(gb));n.value='';m.value='';render()});render()}
+setupGB();document.addEventListener('astro:after-swap',setupGB);
+</script>

@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection, render } from 'astro:content';
+export async function getStaticPaths() {
+  const certs = await getCollection('certifications');
+  return certs.map((cert) => ({ params: { slug: cert.id }, props: { cert } }));
+}
+const { cert } = Astro.props;
+const { Content } = await render(cert);
+---
+<BaseLayout title={`${cert.data.title} — Certifications`}>
+  <Header />
+  <main class="container">
+    <article style="padding:2rem 0;max-width:700px">
+      <a href="/certifications/" style="font-family:var(--font-mono);font-size:12px;color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:2rem">← back to certifications</a>
+      <div style="display:flex;gap:20px;align-items:flex-start;margin-bottom:3rem">
+        {cert.data.image ? <img src={cert.data.image} alt={cert.data.title} style="width:64px;height:64px;object-fit:contain;border-radius:12px;background:var(--bg3);padding:6px" /> : <div style="font-size:20px;color:var(--accent);width:64px;height:64px;display:flex;align-items:center;justify-content:center;background:rgba(0,229,160,.1);border-radius:12px">{cert.data.size === 'major' ? '★' : '✓'}</div>}
+        <div>
+          <h1 style="font-size:28px;font-weight:600;margin-bottom:6px">{cert.data.title}</h1>
+          <p style="font-size:15px;color:var(--muted);margin-bottom:4px">Issued by {cert.data.issuer}</p>
+          {cert.data.description && <p style="font-size:14px;color:var(--muted);line-height:1.5;margin-bottom:8px">{cert.data.description}</p>}
+          <p style="font-family:var(--font-mono);font-size:12px;color:var(--muted);margin-bottom:12px">{cert.data.date.toLocaleDateString('en-US',{month:'long',year:'numeric'})}</p>
+          {cert.data.credentialUrl && <a href={cert.data.credentialUrl} target="_blank" rel="noopener" class="social-btn" style="margin-bottom:12px;display:inline-flex">View Credential →</a>}
+          <div style="display:flex;flex-wrap:wrap;gap:6px">{cert.data.tags.map((tag:string)=>(<span class="tag">{tag}</span>))}</div>
+        </div>
+      </div>
+      <div class="prose"><Content /></div>
+    </article>
+  </main>
+  <Footer />
+</BaseLayout>

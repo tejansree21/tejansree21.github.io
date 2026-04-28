@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+<BaseLayout title="Case Studies & Publications — Tejan Sree Challa"><Header />
+<main class="container">
+  <section style="padding:3rem 0 2rem"><div class="section-label">// case studies & publications</div><h1 style="font-size:32px;font-weight:600;margin-bottom:8px">Research & deep dives</h1><p style="color:var(--muted);font-size:15px;max-width:550px">In-depth case studies and research publications. Currently a work in progress.</p></section>
+  <div style="display:flex;flex-direction:column;gap:16px;margin-top:2rem;max-width:700px">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:24px;border-left:3px solid #f59e0b"><div style="font-family:var(--font-mono);font-size:10px;color:#f59e0b;letter-spacing:2px;display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;animation:pulse 2s ease-in-out infinite"></span>IN PROGRESS</div><h3 style="font-size:17px;font-weight:500;margin-bottom:8px">Brain Insight Classifier — Full Case Study</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px">A deep dive into building a brain imaging classifier: problem definition, data pipeline, model architecture, and results.</p><div style="display:flex;flex-wrap:wrap;gap:6px"><span class="tag tag--accent">TypeScript</span><span class="tag tag--purple">Machine Learning</span><span class="tag">Medical AI</span></div></div>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:24px;border-left:3px solid #f59e0b"><div style="font-family:var(--font-mono);font-size:10px;color:#f59e0b;letter-spacing:2px;display:flex;align-items:center;gap:8px;margin-bottom:10px"><span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;animation:pulse 2s ease-in-out infinite"></span>IN PROGRESS</div><h3 style="font-size:17px;font-weight:500;margin-bottom:8px">Cost Rental Analysis — UX & Technical Case Study</h3><p style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px">How I designed and built a rental property finder for Ireland's cost rental scheme.</p><div style="display:flex;flex-wrap:wrap;gap:6px"><span class="tag tag--accent">React</span><span class="tag tag--blue">Supabase</span><span class="tag">UX Research</span></div></div>
+  </div>
+  <div style="margin-top:3rem"><div class="section-label">// publications</div><p style="color:var(--muted);font-size:14px;line-height:1.7;max-width:550px">No publications yet — actively working on research. Subscribe to the <a href="/rss.xml" style="color:var(--accent)">RSS feed</a> to stay updated.</p></div>
+</main><Footer /></BaseLayout>

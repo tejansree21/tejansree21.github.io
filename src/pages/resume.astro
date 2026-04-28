@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+<BaseLayout title="Resume — Tejan Sree Challa"><Header />
+<main class="container">
+  <section style="padding:3rem 0 2rem"><div class="section-label">// resume</div><h1 style="font-size:32px;font-weight:600;margin-bottom:8px">Resume</h1><p style="color:var(--muted);font-size:15px">My experience, education, and skills at a glance.</p></section>
+  <div style="max-width:700px;margin-top:1rem">
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;margin-bottom:3rem;flex-wrap:wrap;gap:16px"><div><h3 style="font-size:15px;font-weight:500">Tejan Sree Challa — Resume</h3><p style="font-size:12px;color:var(--muted);margin-top:2px">Last updated April 2026</p></div><a href="/resume.pdf" download style="font-family:var(--font-mono);font-size:12px;padding:10px 24px;border:1px solid var(--accent);border-radius:6px;color:var(--accent);background:transparent;text-decoration:none">Download PDF ↓</a></div>
+    <div style="margin-bottom:2.5rem"><h2 style="font-family:var(--font-mono);font-size:12px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)">Education</h2><div style="margin-bottom:20px"><div style="display:flex;justify-content:space-between;margin-bottom:6px"><div><h3 style="font-size:15px;font-weight:500">National College of Ireland</h3><p style="font-size:13px;color:var(--muted);margin-top:2px">BSc (Hons) in Computing</p></div><span style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">2023 — Present</span></div><p style="font-size:13px;color:var(--muted);line-height:1.6">Studying computer science with focus on software development, data structures, and machine learning.</p></div></div>
+    <div style="margin-bottom:2.5rem"><h2 style="font-family:var(--font-mono);font-size:12px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)">Skills</h2><div style="display:flex;flex-wrap:wrap;gap:6px"><span class="tag tag--accent">TypeScript</span><span class="tag tag--accent">JavaScript</span><span class="tag tag--accent">React</span><span class="tag tag--accent">Next.js</span><span class="tag tag--purple">Python</span><span class="tag tag--purple">Machine Learning</span><span class="tag tag--blue">Node.js</span><span class="tag tag--blue">Supabase</span><span class="tag">Astro</span><span class="tag">Tailwind CSS</span><span class="tag">SQL</span><span class="tag">Git</span></div></div>
+  </div>
+</main><Footer /></BaseLayout>

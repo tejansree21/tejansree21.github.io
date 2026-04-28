@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection, render } from 'astro:content';
+export async function getStaticPaths() {
+  const notes = await getCollection('notes');
+  return notes.map((note) => ({ params: { slug: note.id }, props: { note } }));
+}
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+<BaseLayout title={`${note.data.title} — Notes`}>
+  <Header />
+  <main class="container">
+    <article style="padding:2rem 0;max-width:700px">
+      <a href="/notes/" style="font-family:var(--font-mono);font-size:12px;color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:2rem">← back to notes</a>
+      <span style="font-family:var(--font-mono);font-size:12px;color:var(--accent3);display:block;margin-bottom:8px">{note.data.date.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</span>
+      <h1 style="font-size:24px;font-weight:500;margin-bottom:2rem">{note.data.title}</h1>
+      <div class="prose"><Content /></div>
+    </article>
+  </main>
+  <Footer />
+</BaseLayout>
