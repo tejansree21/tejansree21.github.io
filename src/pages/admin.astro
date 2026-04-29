@@ -222,6 +222,9 @@
       // Set today's date as default
       const today = new Date().toISOString().split('T')[0];
       document.querySelectorAll('input[type="date"]').forEach(el => el.value = today);
+      // Load saved token
+      const savedToken = localStorage.getItem('gh-token');
+      if (savedToken) document.getElementById('github-token').value = savedToken;
     } else {
       document.getElementById('pin-error').style.display = 'block';
       document.getElementById('pin-input').value = '';
@@ -259,6 +262,7 @@
   function getToken() {
     const t = document.getElementById('github-token').value.trim();
     if (!t) { showToast('Please enter your GitHub token first', 'error'); return null; }
+    localStorage.setItem('gh-token', t);
     return t;
   }
 
